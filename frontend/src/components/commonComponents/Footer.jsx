@@ -10,7 +10,7 @@ import {
   Linkedin,
   Instagram
 } from 'lucide-react';
-import { useNavigate , Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 const Footer = () => {
   const navigate = useNavigate()
   return (
@@ -26,13 +26,13 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
 
-              <a href="#" className="hover:text-white transition-colors">
+              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="hover:text-white transition-colors">
-                < X className="w-5 h-5" />
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                <X className="w-5 h-5" />
               </a>
-              <a href="#" className="hover:text-white transition-colors">
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                 <Linkedin className="w-5 h-5" />
               </a>
             </div>
@@ -53,7 +53,7 @@ const Footer = () => {
                 <Link to="/features" className="hover:text-white transition-colors">Features</Link>
               </li>
               <li>
-                <Link to="/demo-quiz" className="hover:text-white transition-colors">Demo Quiz</Link>
+                <Link to="/demo-quiz" className="hover:text-white transition-colors">Contact Us</Link>
               </li>
               <li>
                 <Link to="/signup" className="hover:text-white transition-colors">Sign Up</Link>
@@ -84,7 +84,7 @@ const Footer = () => {
           </div> */}
 
 
-        
+
 
 
           <div className="space-y-4">
@@ -112,8 +112,12 @@ const Footer = () => {
               © {new Date().getFullYear()} Quizify. All rights reserved.
             </div>
             <div className="flex space-x-6 text-sm">
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              <Link to="/privacy-policy" className="hover:text-white transition-colors">
+                Privacy Policy
+              </Link>
+              <Link to="/terms-of-service" className="hover:text-white transition-colors">
+                Terms of Service
+              </Link>
               {/* <a href="#" className="hover:text-white transition-colors">Cookie Policy</a> */}
             </div>
           </div>

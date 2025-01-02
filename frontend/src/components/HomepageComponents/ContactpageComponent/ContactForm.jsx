@@ -4,13 +4,13 @@ import { Mail, Phone, MapPin, Facebook, Twitter, Instagram } from 'lucide-react'
 const ContactForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+ 
   };
 
   return (
     <div className="container mx-auto px-4 py-10 md:py-28">
       <div className="grid md:grid-cols-2 gap-8 items-start">
-        {/* Left Section */}
+       
         <div className="space-y-8">
           <div>
             <h1 className="text-4xl max-w-[500px] text-purple-700  font-bold leading-tight mb-4">

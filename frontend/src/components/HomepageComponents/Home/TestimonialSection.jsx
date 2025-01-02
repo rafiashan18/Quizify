@@ -1,9 +1,10 @@
 import React from 'react'
 
-import Testimonial from '../commonComponents/testimonial'
-import review1 from '../../assets/images/review1.jpg'
-import review4 from '../../assets/images/review4.jpg'
-import review3 from '../../assets/images/review3.jpg'
+import Testimonial from '../../commonComponents/testimonial'
+
+import review1 from '../../../assets/images/review1.jpg'
+import review4 from '../../../assets/images/review4.jpg'
+import review3 from '../../../assets/images/review3.jpg'
 
 const TestimonialSection = () => {
     return (

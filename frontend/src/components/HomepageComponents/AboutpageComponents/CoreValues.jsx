@@ -1,5 +1,6 @@
 import { Brain, Users, Share2, Trophy, Shield, CreditCard } from "lucide-react";
-import coreVlaues from "../../assets/images/coreValues.png"
+import coreVlaues from "../../../assets/images/coreValues.png"
+
 const CoreValues = () => {
     const values = [
       {

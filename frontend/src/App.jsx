@@ -9,6 +9,7 @@ import Login from './components/checkAuth/Login';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import ContactUs from './pages/ContactUs';
+import FeaturePage from './pages/FeaturePage';
 
 const ScrollToTop = () => {
   const { pathname, key } = useLocation();
@@ -30,7 +31,7 @@ function App() {
         <Routes>
           <Route path="/" element={<PublicLayout />}>
             <Route index element={<Home />} />
-            <Route path="explore" element={<Explore />} />
+            <Route path="features" element={<FeaturePage />} />
             <Route path="about-us" element={<AboutUs />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/login" element={<Login />} />

@@ -23,7 +23,7 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <NavLink to="/" style={navLinkStyles} className="hover:text-purple-800">Home</NavLink>
-            <NavLink to="/explore" style={navLinkStyles} className="hover:text-purple-800">Explore</NavLink>
+            <NavLink to="/features" style={navLinkStyles} className="hover:text-purple-800">Feature</NavLink>
             <NavLink to="/about-us" style={navLinkStyles} className="hover:text-purple-800">About Us</NavLink>
             <NavLink to="/contact-us" style={navLinkStyles} className="hover:text-purple-800">Contact Us</NavLink>
           </div>

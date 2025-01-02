@@ -1,8 +1,8 @@
 import React from 'react'
-import HeroSection from '../components/HomepageComponents/HeroSection'
-import FeatureSection from '../components/HomepageComponents/FeatureSection'
-import TestimonialSection from '../components/HomepageComponents/testimonialSection'
-import CallToAction from '../components/HomepageComponents/CallToAction'
+import HeroSection from '../components/HomepageComponents/Home/HeroSection'
+import FeatureSection from '../components/HomepageComponents/Home/FeatureSection'
+import TestimonialSection from '../components/HomepageComponents/Home/TestimonialSection'
+import CallToAction from '../components/HomepageComponents/Home/CallToAction'
 
 const Home = () => {
   return (

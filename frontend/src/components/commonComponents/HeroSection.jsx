@@ -1,7 +1,8 @@
 import React from 'react';
 import backgroundImage from '../../assets/images/background.jpg'
-import ImageGallery from './ImageGallary';
-const HeroSection = () => {
+
+
+const HeroSection = ({title , description}) => {
     return (
         <div className="relative ">
             <div
@@ -14,9 +15,9 @@ const HeroSection = () => {
                 <div className="hero-text-wrapper  -top-6  flex justify-center  relative z-10 container mx-auto px-4 h-full  items-center">
                     <div className="max-w-2xl  text-center text-white">
                         <h1 className=" text-3xl font-bold py-4 ">
-                            About Us
+                            {title}
                         </h1>
-                        <p className='max-w-xl'>To empower learners of all ages by providing an interactive platform that makes knowledge sharing enjoyable and accessible.</p>
+                        <p className='max-w-xl'>{description}</p>
                     </div>
                 </div>
                 {/* <div className="custom-shape-divider-bottom-1735738523">
@@ -25,7 +26,7 @@ const HeroSection = () => {
                     </svg>
                 </div> */}
             </div>
-            <ImageGallery />
+         
         </div>
     );
 };

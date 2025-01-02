@@ -1,8 +1,8 @@
 import React from 'react'
-import Feature from '../commonComponents/Feature'
-import Feature1 from '../../assets/videos/feature1.mp4'
-import Feature2 from '../../assets/videos/feature2.mp4'
-import Feature3 from '../../assets/videos/feature3.mp4'
+import Feature from "../../commonComponents/Feature"
+import Feature1 from "../../../assets/videos/feature1.mp4"
+import Feature2 from "../../../assets/videos/feature2.mp4"
+import Feature3 from "../../../assets/videos/feature3.mp4"
 const FeatureSection = () => {
     return (
         <>

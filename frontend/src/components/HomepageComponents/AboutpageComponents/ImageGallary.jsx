@@ -1,7 +1,7 @@
-import about1 from "../../assets/images/about-1.png";
-import about2 from "../../assets/images/about-2.jpg";
-import about3 from "../../assets/images/about-3.jpg";
-import about4 from "../../assets/images/about-4.jpg";
+import about1 from "../../../assets/images/about-1.png";
+import about2 from "../../../assets/images/about-2.jpg";
+import about3 from "../../../assets/images/about-3.jpg";
+import about4 from "../../../assets/images/about-4.jpg";
 
 const ImageGallery = () => {
   return (

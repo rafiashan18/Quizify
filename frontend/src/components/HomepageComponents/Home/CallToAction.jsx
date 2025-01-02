@@ -1,5 +1,5 @@
 import React from 'react';
-import ctaBackground from '../../assets/images/ctaBackground.png'
+import ctaBackground from '../../../assets/images/ctaBackground.png'
 const CallToAction = () => {
     return (
         <div className='flex items-center justify-center my-7 lg:my-14 md:my-10 sm:my-4 mx-5  '>
