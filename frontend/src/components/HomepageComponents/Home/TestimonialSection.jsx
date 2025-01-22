@@ -18,18 +18,21 @@ const TestimonialSection = () => {
                             description="I absolutely love this quiz app! The ability to create and share quizzes with friends is fantastic. The interface is user-friendly, and I appreciate the scoreboard feature that keeps track of my scores. Highly recommend for quiz lovers!"
                             imageSrc={review1}
                             borderColor="purple"
+                            index={1}
                         />
                         <Testimonial
                             title="Jhonnyy"
                             description="This quiz application is a game changer! I enjoy creating quizzes and challenging my friends. The API for generating random quizzes is a great addition, making it easy to keep things fresh. The only downside is that some quizzes require payment, but the quality is worth it!"
                             imageSrc={review4}
                             borderColor="purple"
+                            index={2}
                         />
                         <Testimonial
                             title="Jhonnyy"
                             description="I think this quiz app has a lot of potential, but it needs some improvements. The quiz creation process is straightforward, and I love the variety of topics available. However, I found some of the pro quizzes to be overpriced for what they offer. Overall, it's a fun app, but there's room for growth"
                             imageSrc={review3}
                             borderColor="purple"
+                            index={3}
                         />
 
                     </div>
