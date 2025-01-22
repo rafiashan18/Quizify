@@ -2,7 +2,11 @@ import React from 'react';
 import ctaBackground from '../../../assets/images/ctaBackground.png'
 const CallToAction = () => {
     return (
-        <div className='flex items-center justify-center my-7 lg:my-14 md:my-10 sm:my-4 mx-5  '>
+        <div 
+        data-aos="zoom-out"
+        data-aos-duration="1000"
+        data-aos-once="true"
+        className='flex items-center justify-center my-7 lg:my-14 md:my-10 sm:my-4 mx-5  '>
             <div className="relative min-h-[400px] max-w-7xl w-full bg-gradient-to-r border   rounded-2xl   overflow-hidden">
 
                 <div

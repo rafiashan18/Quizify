@@ -1,7 +1,7 @@
 import React from 'react'
-import Features from '../components/HomepageComponents/FeaturespageComponent/features'
-import CTA from '../components/commonComponents/CTA'
-import HeroSection from '../components/commonComponents/HeroSection'
+import Features from '../../components/HomepageComponents/FeaturespageComponent/features'
+import CTA from '../../components/commonComponents/CTA'
+import HeroSection from '../../components/commonComponents/HeroSection'
 
 const FeaturePage = () => {
   return (

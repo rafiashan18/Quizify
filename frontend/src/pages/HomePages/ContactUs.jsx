@@ -1,7 +1,7 @@
 import React from 'react'
-import HeroSection from '../components/commonComponents/HeroSection'
-import ContactForm from '../components/HomepageComponents/ContactpageComponent/ContactForm'
-import GoogleMap from '../components/HomepageComponents/ContactpageComponent/GoogleMap'
+import HeroSection from '../../components/commonComponents/HeroSection'
+import ContactForm from '../../components/HomepageComponents/ContactpageComponent/ContactForm'
+import GoogleMap from '../../components/HomepageComponents/ContactpageComponent/GoogleMap'
 
 const ContactUs = () => {
   return (
