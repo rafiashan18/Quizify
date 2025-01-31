@@ -1,9 +1,13 @@
 import React from 'react'
 
-const Testimonial = ({ title, description, imageSrc, borderColor }) => {
+const Testimonial = ({ title, description, imageSrc, borderColor, index }) => {
   return (
     <>
-      <div className="lg:w-1/3 lg:mb-0 p-4">
+      <div className="lg:w-1/3 lg:mb-0 p-4"
+      data-aos="fade-up"
+      data-aos-duration="1000"
+      data-aos-delay={index * 300}
+      >
         <div className="h-full text-center">
           <img alt="testimonial" className="w-20 h-20 mb-8 object-cover object-center rounded-full inline-block border-2 border-gray-200 bg-gray-100" src={`${imageSrc}`} />
           <p className="leading-relaxed">{description}</p>

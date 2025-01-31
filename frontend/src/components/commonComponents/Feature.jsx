@@ -12,9 +12,14 @@ const Feature = ({ title, description, videoSrc, isLeft, number, borderColor }) 
 
   const { border, text } = getBorderColorClass(borderColor)
   return (
-    <div className="flex justify-center items-end h-auto px-4 py-12">
-      <div className={`max-w-7xl w-full flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8`}>
-        <div className="w-full md:w-1/2 p-4 relative md: px-3">
+    <div className="flex justify-center items-end h-auto overflow-hidden px-4 py-12 o">
+      <div className={`max-w-7xl w-full flex flex-col  ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-8`}>
+        <div 
+          className="w-full md:w-1/2 p-4 relative md: px-3 overflow-hidden"
+          data-aos={isLeft ? "fade-right" : "fade-left"}
+          data-aos-duration="1000"
+          data-aos-once="true" 
+        >
           <span className={` text-6xl md:text-8xl  font-bold  ${text} select-none`}>
             {number}
           </span>
@@ -23,7 +28,12 @@ const Feature = ({ title, description, videoSrc, isLeft, number, borderColor }) 
             <p className="text-gray-500  max-w-xl lg:text-2xl  md:text-lg  ">{description}</p>
           </div>
         </div>
-        <div className="w-full md:w-1/2 p-4">
+        <div 
+          className="w-full md:w-1/2 p-4 overflow-hidden"
+          data-aos={isLeft ? "fade-left" : "fade-right"}
+          data-aos-duration="1000"
+          data-aos-once="true" 
+        >
           <div className={`rounded-2xl overflow-hidden border-4 md:border-8 ${border}`}>
             <video
               className="w-full rounded-1xl"

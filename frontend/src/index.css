@@ -1,26 +1,108 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 html {
-    scroll-behavior: smooth;
-  }
-.custom-shape-divider-bottom-1735738523 {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    line-height: 0;
-    transform: rotate(180deg);
+  scroll-behavior: smooth;
+  /* height: 100%; */
 }
 
-.custom-shape-divider-bottom-1735738523 svg {
-    position: relative;
-    display: block;
-    width: calc(172% + 1.3px);
-    height: 102px;
+body {
+  overflow-x: hidden;
+  /* height: 100vmax; */
+  
+}
+/* 
+
+.scrollbar-custom {
+  overflow: auto;
 }
 
-.custom-shape-divider-bottom-1735738523 .shape-fill {
-    fill: #FFFFFF;
+.scrollbar-custom::-webkit-scrollbar {
+  height: 0; 
+}
+
+.scrollbar-custom:hover::-webkit-scrollbar {
+  height: 2px; 
+  border-radius: 50%;
+  transition: all 1s ease;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: #9125f6;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+.correct-option{
+  background-color: green !important;
+}
+.incorrect-option{
+  background-color: red !important;
+} */
+
+
+
+        /* Custom scrollbar styles */
+        .scrollbar-none::-webkit-scrollbar {
+          display: none;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar {
+          height: 6px;
+        }
+        
+        .scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
+          background-color: #D1D5DB;
+          border-radius: 3px;
+        }
+        
+        .scrollbar-track-gray-100::-webkit-scrollbar-track {
+          background-color: #F3F4F6;
+        }
+
+        @media (min-width: 640px) {
+          .snap-start {
+            width: calc(50% - 2rem) !important;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .snap-start {
+            width: calc(33.333% - 2rem) !important;
+          }
+        }
+
+        @media (min-width: 1280px) {
+          .snap-start {
+            width: calc(25% - 2rem) !important;
+          }
+        }
+  
+
+.bg-gradient-gray {
+  background: linear-gradient(to bottom, #dbdbdb, #858585);
+}
+
+/* Gradient 2: Green */
+.bg-gradient-green {
+  background: linear-gradient(to bottom, #6ee7b7, #10b981);
+}
+
+/* Gradient 3: Blue */
+.bg-gradient-blue {
+  background: linear-gradient(to bottom, #60a5fa, #3b82f6);
+}
+
+/* Gradient 4: Orange */
+.bg-gradient-orange {
+  background: linear-gradient(to bottom, #fb923c, #f97316);
 }

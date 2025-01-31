@@ -8,7 +8,9 @@ const ImageGallery = () => {
     <div className="flex items-center justify-center relative py-20">
       <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 max-w-6xl p-4 overflow-hidden">
         {/* First large image */}
-        <div className="h-40 w-64 sm:h-64 sm:w-96 relative">
+        <div 
+        data-aos="zoom-out" data-aos-delay="100" data-aos-duration="10000" data-aos-once="true"
+        className="h-40 w-64 sm:h-64 sm:w-96 relative">
           <img
             src={about1}
             alt="Gallery image 1"
@@ -17,7 +19,10 @@ const ImageGallery = () => {
         </div>
 
         {/* Second smaller image */}
-        <div className="h-40 w-64 sm:h-48 sm:w-72 relative mt-4 sm:mt-0">
+        <div 
+                data-aos="zoom-out" data-aos-delay="200" data-aos-duration="10000" data-aos-once="true"
+
+        className="h-40 w-64 sm:h-48 sm:w-72 relative mt-4 sm:mt-0">
           <img
             src={about2}
             alt="Gallery image 2"
@@ -26,7 +31,10 @@ const ImageGallery = () => {
         </div>
 
         {/* Third large image */}
-        <div className="h-48 w-80 sm:h-64 sm:w-96 relative hidden md:block">
+        <div 
+                data-aos="zoom-out" data-aos-delay="300" data-aos-duration="10000" data-aos-once="true"
+
+        className="h-48 w-80 sm:h-64 sm:w-96 relative hidden md:block">
           <img
             src={about3}
             alt="Gallery image 3"
@@ -35,7 +43,10 @@ const ImageGallery = () => {
         </div>
 
         {/* Fourth smaller image */}
-        <div className="h-40 w-64 sm:h-48 sm:w-72 relative hidden md:block">
+        <div
+                data-aos="zoom-out" data-aos-delay="400" data-aos-duration="10000" data-aos-once="true"
+
+         className="h-40 w-64 sm:h-48 sm:w-72 relative hidden md:block">
           <img
             src={about4}
             alt="Gallery image 4"

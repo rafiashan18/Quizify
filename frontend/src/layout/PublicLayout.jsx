@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom'
 const publicLayout = () => {
     return (
         <>
-            <Navbar />
+            <div className=''><Navbar /></div>
             <main>
                 <Outlet />
             </main>
