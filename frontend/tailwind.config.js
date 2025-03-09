@@ -1,11 +1,21 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
-  ],  theme: {
-    extend: {},
+  ],
+    theme: {
+    extend: {
+      colors:{
+        darkPurple:"#280A4F"
+      }
+    },
+   
   },
-  plugins: [],
+  plugins: [
+
+    require('tailwind-scrollbar'),
+  ],
 }
 

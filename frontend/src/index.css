@@ -1,26 +1,97 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 html {
-    scroll-behavior: smooth;
-  }
-.custom-shape-divider-bottom-1735738523 {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    line-height: 0;
-    transform: rotate(180deg);
+  /* scroll-behavior: smooth; */
+  /* height: 100%; */
 }
 
-.custom-shape-divider-bottom-1735738523 svg {
-    position: relative;
-    display: block;
-    width: calc(172% + 1.3px);
-    height: 102px;
+body {
+  overflow-x: hidden !important;
+  /* height: 100vmax; */
 }
 
-.custom-shape-divider-bottom-1735738523 .shape-fill {
-    fill: #FFFFFF;
+.top-show {
+  z-index: 99 !important;
+}
+/* 
+
+.scrollbar-custom {
+  overflow: auto;
+}
+
+.scrollbar-custom::-webkit-scrollbar {
+  height: 0; 
+}
+
+.scrollbar-custom:hover::-webkit-scrollbar {
+  height: 2px; 
+  border-radius: 50%;
+  transition: all 1s ease;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: #9125f6;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+.correct-option{
+  background-color: green !important;
+}
+.incorrect-option{
+  background-color: red !important;
+} */
+
+.bg-custom {
+  background-image: url("./assets/images/background.jpg");
+}
+
+/* Custom scrollbar styles */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+}
+
+.scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 3px;
+}
+
+.scrollbar-track-gray-100::-webkit-scrollbar-track {
+  background-color: #f3f4f6;
+}
+
+
+
+
+
+.bg-gradient-gray {
+  background: linear-gradient(to bottom, #dbdbdb, #858585);
+}
+
+/* Gradient 2: Green */
+.bg-gradient-green {
+  background: linear-gradient(to bottom, #6ee7b7, #10b981);
+}
+
+/* Gradient 3: Blue */
+.bg-gradient-blue {
+  background: linear-gradient(to bottom, #60a5fa, #3b82f6);
+}
+
+/* Gradient 4: Orange */
+.bg-gradient-orange {
+  background: linear-gradient(to bottom, #fb923c, #f97316);
 }

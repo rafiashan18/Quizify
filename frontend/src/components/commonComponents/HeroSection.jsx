@@ -11,9 +11,9 @@ const HeroSection = ({title , description}) => {
                     backgroundImage: `url(${backgroundImage})`
                 }}
             >
-                <div className="absolute inset-0 bg-black/5" /> {/* Overlay */}
-                <div className="hero-text-wrapper  -top-6  flex justify-center  relative z-10 container mx-auto px-4 h-full  items-center">
-                    <div className="max-w-2xl  text-center text-white">
+                <div className="absolute inset-0  bg-black/5" /> {/* Overlay */}
+                <div className="hero-text-wrapper  top-4  flex justify-center  relative z-10 container mx-auto px-4 h-full  items-center">
+                    <div className="max-w-2xl text-center text-white">
                         <h1 className=" text-3xl font-bold py-4 ">
                             {title}
                         </h1>

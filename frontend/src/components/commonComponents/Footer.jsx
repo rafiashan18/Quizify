@@ -26,13 +26,13 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
 
-              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-500 transition-colors">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-500 transition-colors">
                 <X className="w-5 h-5" />
               </a>
-              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-500 transition-colors">
                 <Linkedin className="w-5 h-5" />
               </a>
             </div>
@@ -53,7 +53,7 @@ const Footer = () => {
                 <Link to="/features" className="hover:text-white transition-colors">Features</Link>
               </li>
               <li>
-                <Link to="/demo-quiz" className="hover:text-white transition-colors">Contact Us</Link>
+                <Link to="/contact-us" className="hover:text-white transition-colors">Contact Us</Link>
               </li>
               <li>
                 <Link to="/signup" className="hover:text-white transition-colors">Sign Up</Link>
@@ -94,9 +94,9 @@ const Footer = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="bg-purple-800 text-white px-4 py-2 rounded-lg flex-grow focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="bg-purple-800 text-white px-4 py-2 rounded-lg flex-grow focus:outline-none focus:ring-2 focus:ring-yellow-600"
               />
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 m-0 rounded-lg transition-colors">
+              <button className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 m-0 rounded-lg transition-colors">
                 <Mail className="w-5 h-5" />
               </button>
             </div>

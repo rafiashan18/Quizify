@@ -4,7 +4,11 @@ import { useNavigate } from 'react-router-dom';
 const CTA = () => {
   const navigate = useNavigate()
   return (
-    <section className="body-font bg-gradient-to-r from-purple-50 to-white">
+    <section
+    data-aos="slide-up"
+    data-aos-duration="1000"
+    data-aos-once="true"
+     className="body-font bg-gradient-to-r from-purple-50 to-white">
       <div className="container px-5 py-20 mx-auto">
         <div className="lg:w-2/3 flex flex-col sm:flex-row sm:items-center items-start mx-auto bg-white p-8 rounded-2xl shadow-xl border border-purple-100">
           <div className="flex-grow sm:pr-8">
