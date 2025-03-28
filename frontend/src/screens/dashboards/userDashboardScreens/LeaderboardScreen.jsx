@@ -1,5 +1,5 @@
 // import React from 'react'
-// import Leaderboard from '../../components/userComponents/QuizHistory'
+// import Leaderboard from '../../components/UserDashboard/QuizHistory'
 
 
 // const LeaderboardPage = () => {

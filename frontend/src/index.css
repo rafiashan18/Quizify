@@ -95,3 +95,31 @@ body {
 .bg-gradient-orange {
   background: linear-gradient(to bottom, #fb923c, #f97316);
 }
+.toggle-zIndex {
+  z-index: 51;
+}
+.modal-zIndex{
+  z-index: 55;
+}
+.navbar{
+  /* z-index: 99; */
+}
+.mediumSizeChart {
+  width: 100%;
+ 
+}
+
+@media (max-width: 500px) {
+  .mediumSizeChart {
+    width: 250px !important;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+@media (min-width: 501px) and (max-width: 653px) {
+  .mediumSizeChart {
+    width: 480px !important;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}

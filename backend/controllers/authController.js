@@ -75,9 +75,11 @@ const login = async (req, res) => {
             name: user.name,
             email: user.email,
             username: user.username,
-            role: user.role
+            role: user.role,
+            profileImage:user.profilePicture,
+            bio:user.bio,
         };
-
+        console.log(userData)
         return res.status(200).json({
             success: true,
             accessToken,
@@ -122,7 +124,7 @@ const getMe = async (req, res) => {
             username: user.username,
             role: user.role,
             bio: user.bio,
-            image:user.profilePicture
+            profileImage:user.profilePicture
         }
         console.log("User found:", user._id);
         res.json(userData);

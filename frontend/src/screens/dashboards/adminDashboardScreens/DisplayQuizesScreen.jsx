@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CategorySlider from '../../../components/userComponents/CategorySlider';
+import CategorySlider from '../../../components/Common/CategorySlider';
 import { getAllQuizzes } from '../../../services/QuizApi';
 
 const DisplayQuizesScreen = () => {
@@ -36,13 +36,13 @@ const DisplayQuizesScreen = () => {
     fetchQuizzes();
   }, []);
 
-const handleCategoryClick = (category) => {
-  if (category === "all") {
-    setSelectedCategory(null);
-  } else {
-    setSelectedCategory(category === selectedCategory ? null : category);
-  }
-};
+  const handleCategoryClick = (category) => {
+    if (category === "all") {
+      setSelectedCategory(null);
+    } else {
+      setSelectedCategory(category === selectedCategory ? null : category);
+    }
+  };
 
 const getFilteredQuizzes = () => {
   if (!selectedCategory) return quizzes;
@@ -59,7 +59,7 @@ const getFilteredQuizzes = () => {
 
   return (
     <div className="relative">
-      <div className="z-40 bg-white shadow-sm">
+      <div className=" bg-white shadow-sm   ">
         <CategorySlider 
           onCategoryClick={handleCategoryClick} 
           selectedCategory={selectedCategory} 

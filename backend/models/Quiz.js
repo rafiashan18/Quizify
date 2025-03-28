@@ -14,11 +14,21 @@ const QuizSchema = new mongoose.Schema(
     description: { type: String, required: true },
     difficulty: { type: String, enum: ['easy', 'medium', 'hard'], required: true },
     coverImage: { type: String },
-    questions: [QuestionSchema],
+    isPremium: { type: Boolean, default: false },
+    amount:{
+     type:Number , 
+     required: function(){return this.isPremium},
+     min:[1,'Amount should be positive']
+    },
+     questions: [QuestionSchema],
+    status:{type:String, default:"Active"},
+    attempts:{type:Number, default:0 },
     // createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
   },
   { timestamps: true }
 );
+
+QuizSchema.index({ quizTitle: "text" });
 
 const Quiz = mongoose.model('Quiz', QuizSchema);
 module.exports = Quiz;

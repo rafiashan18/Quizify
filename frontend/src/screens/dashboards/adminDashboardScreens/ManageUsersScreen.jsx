@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { getAllUsers, toggleUserStatus } from '../../../services/UserApi';
 import UserAddModal from '../../../modals/UserAddModel';
 import UserDetailsModal from '../../../modals/UserDetailsModal';
-import UserUpdateModal from '../../../modals/UserDeleteModal';
-import UserDeleteModal from '../../../modals/UserDeleteModal';
+import UserUpdateModal from '../../../modals/DeleteConfirmation';
+import DeleteConfirmation from '../../../modals/DeleteConfirmation';
 import ToastService from '../../../services/ToastService';
+import { getAllUserProgress, getUserProgress } from '../../../services/UserProgressApi';
 
 const ManageUserScreen = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [userProgress, setUserProgress] = useState({});
   
   // Modal states
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -79,7 +81,9 @@ const ManageUserScreen = () => {
   };
 
   // Modal handlers
-  const openDetailsModal = (user) => {
+  const openDetailsModal = async(user) => {
+    const response = await getAllUserProgress(user._id)
+    setUserProgress(response);
     setSelectedUser(user);
     setIsDetailsModalOpen(true);
   };
@@ -113,17 +117,17 @@ const ManageUserScreen = () => {
   return (
     <div className="bg-white shadow-md rounded-xl overflow-hidden">
       {/* Table Header */}
-      <div className="bg-purple-50 px-6 py-4 flex justify-between items-center">
+      <div className="bg-purple-50 px-2 md:px-6 py-4 flex justify-between items-center">
         <h2 className="text-xl font-semibold text-purple-800">User Management</h2>
         <button 
           onClick={() => setIsAddModalOpen(true)}
-          className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
+          className="px-4 py-2 whitespace-nowrap bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
           Add New User
         </button>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
+      {/* Desktop Table View */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full">
           <thead className="bg-purple-100">
             <tr>
@@ -132,19 +136,16 @@ const ManageUserScreen = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-purple-600 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-purple-600 uppercase tracking-wider">Role</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-purple-600 uppercase tracking-wider">Created At</th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-purple-600 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-center text-xs font-medium text-purple-600 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {users && users.length > 0 ? (
               users.map((user, index) => {
-                // Set default status as 'active' if not present
                 const status = user.status || 'active';
                 return (
                   <tr key={user._id} className="hover:bg-purple-50 transition-colors">
-                    <td>
-                      <p className='px-6'>{index+1}</p>
-                    </td>
+                    <td><p className='px-6'>{index+1}</p></td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div
                         onClick={() => openDetailsModal(user)}
@@ -181,20 +182,13 @@ const ManageUserScreen = () => {
                       {formatDate(user.createdAt)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end space-x-2">
+                      <div className="flex justify-around gap-3 space-x-2">
                         <button 
                           onClick={() => toggleBlockStatus(user._id, status)}
                           className={`${status === 'blocked' ? 'text-green-600 hover:text-green-900' : 'text-yellow-600 hover:text-yellow-900'} transition-colors`}
                           title={status === 'blocked' ? 'Unblock User' : 'Block User'}
                         >
                           {status === 'blocked' ? 'Unblock' : 'Block'}
-                        </button>
-                        <button 
-                          onClick={() => openUpdateModal(user)}
-                          className="text-purple-600 hover:text-purple-900 transition-colors"
-                          title="Edit User"
-                        >
-                          Edit
                         </button>
                         <button 
                           onClick={() => openDeleteModal(user)}
@@ -219,23 +213,102 @@ const ManageUserScreen = () => {
         </table>
       </div>
 
-      {/* Pagination - Can be implemented later when needed */}
+      {/* Mobile List View */}
+      <div className="md:hidden">
+        {users && users.length > 0 ? (
+          users.map((user, index) => {
+            const status = user.status || 'active';
+            return (
+              <div 
+                key={user._id} 
+                className="p-4 border-b border-gray-200 hover:bg-purple-50 transition-colors"
+              >
+                <div className="flex items-center mb-2">
+                  <div className="flex-shrink-0 h-10 w-10 mr-4">
+                    <img 
+                      className="h-10 w-10 rounded-full" 
+                      src={`${user.profilePicture || 'default.jpg'}`} 
+                      alt={`${user.name}'s avatar`}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://api.dicebear.com/7.x/avataaars/svg?seed=" + user._id;
+                      }}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                    <div className="text-sm text-gray-500">{user.email}</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <div>
+                    <span className="text-xs text-gray-600">Status:</span>
+                    <span className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(status)}`}>
+                      {status.charAt(0).toUpperCase() + status.slice(1)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-600">Role:</span>
+                    <span className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full ${getRoleColor(user.role)}`}>
+                      {user.role}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-600">Created:</span>
+                    <span className="ml-2 text-xs text-gray-500">
+                      {formatDate(user.createdAt)}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex justify-between mt-3">
+                  <button 
+                    onClick={() => openDetailsModal(user)}
+                    className="text-purple-600 hover:text-purple-900 transition-colors"
+                  >
+                    View Details
+                  </button>
+                  <div className="flex space-x-2">
+                    <button 
+                      onClick={() => toggleBlockStatus(user._id, status)}
+                      className={`${status === 'blocked' ? 'text-green-600 hover:text-green-900' : 'text-yellow-600 hover:text-yellow-900'} transition-colors`}
+                    >
+                      {status === 'blocked' ? 'Unblock' : 'Block'}
+                    </button>
+                    <button 
+                      onClick={() => openDeleteModal(user)}
+                      className="text-red-600 hover:text-red-900 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="p-4 text-center text-gray-500">
+            No users found
+          </div>
+        )}
+      </div>
+
+      {/* Pagination */}
       <div className="bg-purple-50 px-6 py-4 flex justify-between items-center">
         <span className="text-sm text-gray-700">
           Showing {users && users.length} users
         </span>
-        {/* Will add pagination controls when backend pagination is implemented */}
       </div>
 
       {/* Modals */}
       {isDetailsModalOpen && (
         <UserDetailsModal 
           user={selectedUser}
+          userProgress={userProgress}
           onClose={() => setIsDetailsModalOpen(false)}
         />
       )}
       
-       {isUpdateModalOpen && (
+      {isUpdateModalOpen && (
         <UserUpdateModal
           user={selectedUser}
           onClose={() => setIsUpdateModalOpen(false)}
@@ -244,7 +317,7 @@ const ManageUserScreen = () => {
       )} 
       
       {isDeleteModalOpen && (
-        <UserDeleteModal
+        <DeleteConfirmation
           user={selectedUser}
           onClose={() => setIsDeleteModalOpen(false)}
           onSuccess={fetchUsers}

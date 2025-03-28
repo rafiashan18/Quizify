@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import ProfileUI from '../../../components/commonComponents/ProfileUI'; 
+import ProfileUI from '../../../components/Common/ProfileUI'; 
 import { getUser } from '../../../services/AuthApi';
 import { updateUser, uploadProfilePicture } from '../../../services/UserApi';
+import { updateUserProfile } from '../../../redux/Slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 const ProfileScreen = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -10,11 +12,14 @@ const ProfileScreen = () => {
     username: '',
     email: '',
     bio: '',
-    profilePicture: ''
+    profilePicture: '',
+    profileImageFile: null  // New state to track file to upload
   });
+  const [previewImage, setPreviewImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
 
   const getUserData = async () => {
     try {
@@ -23,6 +28,8 @@ const ProfileScreen = () => {
       console.log("User data:", response);
       setUser(response);
       setIsLoading(false);
+      
+      dispatch(updateUserProfile(response))
     } catch (error) {
       console.error("Error fetching user data:", error);
       setIsLoading(false);
@@ -37,13 +44,10 @@ const ProfileScreen = () => {
     }));
   };
 
-  const handleImageChange = async (file) => {
-    if (!file || !isEditing) return;
-    
-   
-    setUploadError('');
-    
-    
+  const handleImageChange = (file) => {
+    if (!file) return;
+
+    // Validate file
     if (file.size > 5 * 1024 * 1024) {
       setUploadError('File size too large (max 5MB)');
       return;
@@ -53,48 +57,77 @@ const ProfileScreen = () => {
       setUploadError('Only image files are allowed');
       return;
     }
-    
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewImage(reader.result);
+    };
+    reader.readAsDataURL(file);
+
+    // Store the file for later upload
+    setUser(prev => ({
+      ...prev,
+      profileImageFile: file
+    }));
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    setUploadError('');
+    setIsUploading(true);
+
     try {
-      setIsUploading(true);
-      console.log("Uploading file:", file.name, file.type, file.size);
-      
-      const response = await uploadProfilePicture(file);
-      console.log("Upload response:", response);
-      
-      if (response?.profilePicture) {
-        setUser(prev => ({
-          ...prev,
-          profilePicture: response.profilePicture
-        }));
+      // First, update user profile
+      const userUpdateResponse = await updateUser({
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        bio: user.bio
+      });
+
+      // If there's a file to upload, upload profile picture
+      if (user.profileImageFile) {
+        const imageUploadResponse = await uploadProfilePicture(user.profileImageFile);
+        
+        // Update user state with new profile image
+        if (imageUploadResponse?.profilePicture) {
+          setUser(prev => ({
+            ...prev,
+            profileImage: imageUploadResponse.profilePicture,
+            profileImageFile: null  // Clear the file after upload
+          }));
+          
+          // Clear preview
+          setPreviewImage(null);
+        }
       }
+
+      // Refresh user data to ensure everything is in sync
+      await getUserData();
+
+      // Exit editing mode
+      setIsEditing(false);
     } catch (error) {
-      console.error("Error uploading profile image:", error);
+      console.error("Error saving profile:", error);
+      
+      // Handle potential different error scenarios
       if (error.response?.data?.message) {
         setUploadError(error.response.data.message);
       } else {
-        setUploadError('Failed to upload image. Please try again.');
+        setUploadError('Failed to update profile. Please try again.');
       }
     } finally {
       setIsUploading(false);
     }
   };
 
-  const handleSubmit = async(e) => {
-    try {
-      e.preventDefault();
-      setIsEditing(false);
-      console.log('Form submitted:', user);
-      const response = await updateUser(user);
-      console.log(response);
-      getUserData();
-    } catch(err) {
-      console.log("error in profile upload ", err);
-    }
-  };
-
   const toggleEdit = () => {
     if (isEditing) {
-      handleSubmit({ preventDefault: () => {} });
+      handleSave({ preventDefault: () => {} });
+    } else {
+      // Reset preview when entering edit mode
+      setPreviewImage(null);
     }
     setIsEditing(!isEditing);
   };
@@ -115,8 +148,9 @@ const ProfileScreen = () => {
     <ProfileUI
       isEditing={isEditing}
       user={user} 
+      previewImage={previewImage}
       handleChange={handleChange}
-      handleSubmit={handleSubmit}
+      handleSubmit={handleSave}
       toggleEdit={toggleEdit}
       handleImageChange={handleImageChange}
       isUploading={isUploading}

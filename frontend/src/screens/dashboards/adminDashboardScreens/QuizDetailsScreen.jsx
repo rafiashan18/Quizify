@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getQuizById, updateQuiz, deleteQuizQuestion } from '../../../services/QuizApi';
-import QuizHeader from '../../../components/AdminComponents/Quiz/QuizHeader';
-import QuizInformation from '../../../components/AdminComponents/Quiz/QuizInformation';
-// import QuizQuestions from '../../../components/AdminComponents/Quiz/questionComponents/QuizQuestions';
-import QuizQuestions from '../../../components/AdminComponents/Quiz/questionComponents/QuizQuestion';
-import LoadingSpinner from '../../../components/commonComponents/LoadingSpinner';
-import ErrorMessage from '../../../components/commonComponents/ErrorMessage';
-import FloatingActionButtons from '../../../components/AdminComponents/Quiz/FloatingActionButtons';
+import QuizHeader from '../../../components/AdminDashboard/Quiz/QuizHeader';
+import QuizInformation from '../../../components/AdminDashboard/Quiz/QuizInformation';
+// import QuizQuestions from '../../../components/AdminDashboard/Quiz/QuestionComponents/QuizQuestions';
+import QuizQuestions from '../../../components/AdminDashboard/Quiz/QuestionComponents/QuizQuestion';
+import LoadingSpinner from '../../../components/Common/LoadingSpinner';
+import ErrorMessage from '../../../components/Common/ErrorMessage';
+import FloatingActionButtons from '../../../components/AdminDashboard/Quiz/FloatingActionButtons';
 import {
   setQuiz,
   setLoading,
@@ -19,9 +19,12 @@ import {
   updateQuestionOption,
   updateCorrectOption,
   removeQuestion,
-  resetEditedQuiz
+  resetEditedQuiz,
+  addNewQuestion,
+  setExpandedQuestion // Added this import
 } from '../../../redux/Slices/QuizSlice.jsx';
 import { useDispatch, useSelector } from 'react-redux';
+
 const QuizDetailsScreen = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -36,7 +39,10 @@ const QuizDetailsScreen = () => {
     editMode,
     savingChanges
   } = useSelector(state => state.quiz);
-
+  const [files, setFiles] = useState({
+    coverImage: null,
+    questionImages: []
+  });
   useEffect(() => {
     const fetchQuizDetails = async () => {
       try {
@@ -83,6 +89,49 @@ const QuizDetailsScreen = () => {
     dispatch(updateCorrectOption({ questionIndex, value }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!editedQuiz) return;
+    
+    try {
+      dispatch(setSavingChanges(true));
+      
+      // Create FormData
+      const formData = new FormData();
+      console.log(editedQuiz)
+      formData.append('title', editedQuiz.title);
+      formData.append('description', editedQuiz.description);
+      formData.append('category', editedQuiz.category);
+      formData.append('difficulty', editedQuiz.difficulty);
+      formData.append('isPremium', String(editedQuiz.isPremium));
+      
+      if (files.coverImage) {
+        formData.append('coverImage', files.coverImage);
+      }
+      
+      formData.append('questions', JSON.stringify(editedQuiz.questions));
+      
+      files.questionImages.forEach((file, index) => {
+        if (file) {
+          formData.append('ImageUrl', file);
+        }
+      });
+      
+      const response = await updateQuiz(id, formData, true); 
+      if (response.success) {
+        dispatch(setQuiz(response.quiz || editedQuiz));
+        dispatch(toggleEditMode());
+      } else {
+        dispatch(setError(response.message || 'Failed to update quiz'));
+      }
+    } catch (err) {
+      dispatch(setError('An error occurred while updating the quiz'));
+      console.error(err);
+    } finally {
+      dispatch(setSavingChanges(false));
+    }
+  };
+
   const handleSaveChanges = async () => {
     try {
       dispatch(setSavingChanges(true));
@@ -91,7 +140,6 @@ const QuizDetailsScreen = () => {
       if (response.success) {
         dispatch(setQuiz(editedQuiz));
         dispatch(toggleEditMode());
-        // Show success notification or feedback
       } else {
         dispatch(setError(response.message || 'Failed to update quiz'));
       }
@@ -120,9 +168,27 @@ const QuizDetailsScreen = () => {
     }
   };
 
-  const handleFileChange = () => {
-    
-  }
+  const handleFileChange = (fieldName, file) => {
+    if (fieldName === 'coverImage') {
+      setFiles({
+        ...files,
+        coverImage: file
+      });
+    }
+  };
+  
+  const handleQuestionFileChange = (questionIndex, file) => {
+    const newQuestionImages = [...files.questionImages];
+    newQuestionImages[questionIndex] = file;
+    console.log(files)
+
+    setFiles({
+      ...files,
+      questionImages: newQuestionImages
+    });
+    console.log(files)
+  };
+
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -147,11 +213,12 @@ const QuizDetailsScreen = () => {
  
   return (
     <div className="container mx-auto p-4 max-w-7xl">
+      
       <QuizHeader 
         quiz={quiz}
         editMode={editMode}
         handleEditToggle={handleEditToggle}
-        handleSaveChanges={handleSaveChanges}
+        handleSaveChanges={handleSubmit} 
         savingChanges={savingChanges}
         onBack={() => navigate(-1)}
       />
@@ -167,18 +234,18 @@ const QuizDetailsScreen = () => {
         handleQuestionChange={handleQuestionChange}
         handleOptionChange={handleOptionChange}
         handleCorrectOptionChange={handleCorrectOptionChange}
+        handleQuestionFileChange={handleQuestionFileChange}
       />
 
       {editMode && (
         <FloatingActionButtons 
           handleEditToggle={handleEditToggle}
-          handleSaveChanges={handleSaveChanges}
+          handleSaveChanges={handleSubmit} // Using handleSubmit instead of handleSaveChanges
           savingChanges={savingChanges}
         />
       )}
     </div>
   );
 };
-
 
 export default QuizDetailsScreen;

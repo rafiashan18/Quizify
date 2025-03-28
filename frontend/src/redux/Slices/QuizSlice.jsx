@@ -128,6 +128,23 @@ const quizSlice = createSlice({
       state.editedQuiz = null;
       state.editMode=false
     },
+    addNewQuestion: (state, action) => {
+      // Add to both the main quiz and editedQuiz
+      if (state.quiz) {
+        if (!state.quiz.questions) {
+          state.quiz.questions = [];
+        }
+        state.quiz.questions.push(action.payload);
+      }
+      
+      if (state.editedQuiz) {
+        if (!state.editedQuiz.questions) {
+          state.editedQuiz.questions = [];
+        }
+        state.editedQuiz.questions.push(action.payload);
+      }
+    },
+    
   }
 });
 
@@ -144,7 +161,8 @@ export const {
   updateQuestionOption,
   updateCorrectOption,
   removeQuestion,
-  resetEditedQuiz
+  resetEditedQuiz,
+  addNewQuestion
 } = quizSlice.actions;
 
 export default quizSlice.reducer;

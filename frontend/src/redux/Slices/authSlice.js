@@ -3,32 +3,45 @@ import { jwtDecode } from "jwt-decode";
 
 let logoutTimer = null;
 
-const token = localStorage.getItem("Token");
-let decodedUser = null;
-let isTokenValid = false;
-
-if (token) {
+// Function to get persistent user data from localStorage
+const getPersistentUserData = () => {
     try {
-        decodedUser = jwtDecode(token);
-        const currentTime = Date.now() / 1000;
-        console.log(decodedUser)
-        if (decodedUser.exp > currentTime) {
-            isTokenValid = true;
-            startAutoLogout((decodedUser.exp - currentTime) * 1000); // Start auto-logout timer
-        } else {
-
-            localStorage.removeItem("Token");
+        const token = localStorage.getItem("Token");
+        const storedUserData = localStorage.getItem("UserData");
+        
+        if (token && storedUserData) {
+            const decodedToken = jwtDecode(token);
+            const currentTime = Date.now() / 1000;
+            
+            // Check if token is still valid
+            if (decodedToken.exp > currentTime) {
+                return {
+                    isUserLoggedIn: true,
+                    user: JSON.parse(storedUserData),
+                    accessToken: token
+                };
+            }
         }
-    } catch (error) {
-        console.error("Invalid token", error);
+        
+        // Clear storage if token is invalid
         localStorage.removeItem("Token");
+        localStorage.removeItem("UserData");
+        return null;
+    } catch (error) {
+        console.error("Error retrieving user data", error);
+        localStorage.removeItem("Token");
+        localStorage.removeItem("UserData");
+        return null;
     }
-}
+};
 
-const initialState = {
-    isUserLoggedIn: isTokenValid,
-    user: isTokenValid ? decodedUser : null,
-    accessToken: isTokenValid ? token : null,
+// Get persistent data or set initial state
+const persistedData = getPersistentUserData();
+
+const initialState = persistedData || {
+    isUserLoggedIn: false,
+    user: null,
+    accessToken: null,
 };
 
 const authSlice = createSlice({
@@ -37,19 +50,30 @@ const authSlice = createSlice({
     reducers: {
         setUser: (state, action) => {
             try {
-                const decodedToken = jwtDecode(action.payload.accessToken);
+                const { accessToken, user } = action.payload;
+                const decodedToken = jwtDecode(accessToken);
                 const currentTime = Date.now() / 1000;
 
                 if (decodedToken.exp > currentTime) {
+                    // Update state
                     state.isUserLoggedIn = true;
-                    console.log(action.payload.accessToken)
-                    state.accessToken = action.payload.accessToken;
-                    localStorage.setItem("Token", action.payload.accessToken); // Store token in localStorage
-                    state.user = decodedToken;
-                    console.log(decodedToken)
-                    console.log(state.user)
-                    startAutoLogout((decodedToken.exp - currentTime) * 1000); // Start logout timer
+                    state.accessToken = accessToken;
+                    state.user = {
+                        bio: user.bio,
+                        email: user.email,
+                        name: user.name,
+                        profileImage: user.profileImage,
+                        role: user.role,
+                        username: user.username,
+                        _id: user._id
+                    };
 
+                    // Persist to localStorage
+                    localStorage.setItem("Token", accessToken);
+                    localStorage.setItem("UserData", JSON.stringify(state.user));
+                    
+                    // Start auto-logout timer
+                    startAutoLogout((decodedToken.exp - currentTime) * 1000);
                 } else {
                     console.warn("Token received but already expired");
                 }
@@ -58,21 +82,32 @@ const authSlice = createSlice({
             }
         },
         logout: (state) => {
+            // Clear state
             state.isUserLoggedIn = false;
             state.user = null;
             state.accessToken = null;
-            localStorage.removeItem("Token"); // Remove token on logout
 
+            // Clear localStorage
+            localStorage.removeItem("Token");
+            localStorage.removeItem("UserData");
+
+            // Clear logout timer
             if (logoutTimer) {
                 clearTimeout(logoutTimer);
             }
         },
+        updateUserProfile: (state, action) => {
+            if (state.user) {
+                state.user = { ...state.user, ...action.payload };
+                console.log("updated user profile",state.user)
+                localStorage.setItem("UserData", JSON.stringify(state.user));
+            }
+        }
     },
 });
 
-export const { setUser, logout } = authSlice.actions;
+export const { setUser, logout, updateUserProfile } = authSlice.actions;
 export default authSlice.reducer;
-
 
 function startAutoLogout(timeUntilExpiry) {
     if (logoutTimer) {
@@ -81,6 +116,7 @@ function startAutoLogout(timeUntilExpiry) {
 
     logoutTimer = setTimeout(() => {
         console.warn("Token expired! Automatically logging out...");
+        // Dispatch logout action or reload
         window.location.reload();
     }, timeUntilExpiry);
 }

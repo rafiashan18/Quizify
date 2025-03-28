@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import loginImage from "../../assets/images/loginImage.jpg";
 import { useNavigate } from 'react-router-dom';
-import SignUpForm from '../../components/CheckAuth/SignUpForm';
+import SignUpForm from '../../components/AuthForms/SignUpForm';
 import { signup } from '../../services/AuthApi';
 
 const SignUpScreen = () => {
@@ -27,7 +27,7 @@ const SignUpScreen = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex items-start justify-center p-2 md:pt-2">
+    <div className="mt-16  mb-24 relative flex items-start justify-center p-2 md:pt-2">
       <div className="w-full max-w-3xl rounded-2xl overflow-hidden shadow-2xl">
         <div className="flex">
           {/* Form Section */}
@@ -40,7 +40,7 @@ const SignUpScreen = () => {
                 </p>
               </div>
 
-              <button
+              {/* <button
                 className="w-full flex items-center justify-center gap-2 rounded-3xl bg-white border border-yellow-600 p-2.5 hover:bg-gray-50 transition-all mb-4 text-sm"
               >
                 <img
@@ -49,15 +49,15 @@ const SignUpScreen = () => {
                   className="w-5 h-5"
                 />
                 <span>Continue with Google</span>
-              </button>
+              </button> */}
 
-              <div className="relative my-4">
+              {/* <div className="relative my-4">
                 <div className="relative flex justify-center text-xs">
                   <span className="px-2 bg-white border-purple-400 rounded-md font-semibold text-purple-800/70">
                     Or continue with
                   </span>
                 </div>
-              </div>
+              </div> */}
 
               {/* Form component */}
               <SignUpForm 

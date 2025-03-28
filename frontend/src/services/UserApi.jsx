@@ -94,3 +94,31 @@ export const addUser = async (formData) => {
         throw err;
     }
 }
+
+//add purchased quiz 
+export const addPurchasedQuiz = async (quizId) => {
+    try{
+        console.log("quiz id :",quizId)
+        const response = await api.post('/user/addPurchasedQuiz',{quizId})
+        return response.data
+    }
+    catch(err){
+        console.error("Error in adding purchased quiz:", err);
+        console.error("Response data:", err.response?.data);
+        throw err;
+    }
+}
+
+// check purchased quizes 
+
+export const isQuizPurchased = async (quizId)=>{
+    try{
+        const response = await api.get(`/user/checkQuizPurchasedStatus/${quizId}`)
+        return response.data;
+    }
+    catch(error){
+        console.error("Error in fetching quiz purchase status :", error);
+        console.error("Response data:", error.response?.data);
+        throw error;
+    }
+}

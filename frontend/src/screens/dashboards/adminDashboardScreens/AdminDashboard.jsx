@@ -1,13 +1,13 @@
 import React from 'react';
-import DashboardStats from '../../../components/AdminComponents/dashboardStats';
-import WelcomeAdmin from '../../../components/AdminComponents/WelcomeAdmin';
+import DashboardStats from '../../../components/AdminDashboard/dashboardStats';
+import WelcomeAdmin from '../../../components/AdminDashboard/WelcomeAdmin';
 
 
 import { useDispatch } from 'react-redux';
 
-import UserSignupChart from '../../../components/AdminComponents/Charts/UserSignupChart';
-import PremiumPurchasesChart from '../../../components/AdminComponents/Charts/PremiumPurchasesChart';
-import MostPlayedQuizes from '../../../components/AdminComponents/Charts/MostPlayedQuizes';
+import UserSignupChart from '../../../components/AdminDashboard/Charts/UserSignupChart';
+import PremiumPurchasesChart from '../../../components/AdminDashboard/Charts/PremiumPurchasesChart';
+import MostPlayedQuizes from '../../../components/AdminDashboard/Charts/MostPlayedQuizes';
 
 const AdminDashboard = () => {
     const dispatch = useDispatch();
@@ -34,11 +34,11 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
-            <div className='grid grid-cols-2 gap-6'>
+            <div className='grid md:grid-cols-2 gap-6 sm:grid-cols-1'>
                 <div>
                     < MostPlayedQuizes />
                 </div>
-                <div className='grid grid-cols-2 '>
+                <div className='grid grid-cols-1 '>
                     <PremiumPurchasesChart />
                 </div>
 

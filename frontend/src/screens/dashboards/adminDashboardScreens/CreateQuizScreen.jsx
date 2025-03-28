@@ -1,13 +1,12 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import QuizLayout from '../../../components/AdminComponents/QuizCreation/QuizLayout';
-import QuizNavigation from '../../../components/AdminComponents/QuizCreation/QuizNavigation';
-import QuizStepper from '../../../components/AdminComponents/QuizCreation/QuizStepper';
-import CreateQuizDetails from '../../../components/AdminComponents/QuizCreation/CreateQuizDetails';
-import CreateQuestionForm from '../../../components/AdminComponents/QuizCreation/CreateQuestionForm';
-import QuizReview from '../../../components/AdminComponents/QuizCreation/QuizReview';
+import QuizLayout from '../../../components/AdminDashboard/QuizCreation/QuizLayout';
+import QuizNavigation from '../../../components/AdminDashboard/QuizCreation/QuizNavigation';
+import QuizStepper from '../../../components/AdminDashboard/QuizCreation/QuizStepper';
+import CreateQuizDetails from '../../../components/AdminDashboard/QuizCreation/CreateQuizDetails';
+import CreateQuestionForm from '../../../components/AdminDashboard/QuizCreation/CreateQuestionForm';
+import QuizReview from '../../../components/AdminDashboard/QuizCreation/QuizReview';
 // import { updateQuizDetails } from '../../../redux/Slices/QuizSlice';
 import { addQuiz } from '../../../services/QuizApi';
 
@@ -16,13 +15,15 @@ const CreateQuizScreen = () => {
     // const dispatch = useDispatch();
     const [currentStep, setCurrentStep] = useState(0);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [isSubmitting , setIsSubmiting] = useState(false)
+    const [isSubmitting, setIsSubmiting] = useState(false);
     const [quizDetails, setQuizDetails] = useState({
         title: "",
         description: "",
         category: "",
         difficulty: "",
         coverImage: null,
+        isPremium: false,
+        amount: "", 
     });
     
     const [questions, setQuestions] = useState([]);
@@ -42,12 +43,17 @@ const CreateQuizScreen = () => {
             formData.append("description", quizDetails.description);
             formData.append("category", quizDetails.category);
             formData.append("difficulty", quizDetails.difficulty);
-        
+            formData.append("isPremium", String(quizDetails.isPremium));
+            
+           
+            if (quizDetails.isPremium && quizDetails.amount) {
+                formData.append("amount", quizDetails.amount);
+            }
+
             if (quizDetails.coverImage) {
                 formData.append("coverImage", quizDetails.coverImage);
             }
         
-            
             questions.forEach((question, index) => {
                 formData.append(`questions[${index}][questionText]`, question.questionText);
                 formData.append(`questions[${index}][correctOption]`, question.correctOption);
@@ -57,14 +63,13 @@ const CreateQuizScreen = () => {
                 });
         
                 if (question.imageFile) {
-                    formData.append("ImageUrl", question.imageFile); // Matches backend field
+                    formData.append("ImageUrl", question.imageFile); 
                 }
             });
         
             try {
                 const response = await addQuiz(formData);
                 console.log(response);
-                // dispatch(updateQuizDetails({ ...quizDetails, questions }));
                 navigate('/admin/display-quizes');
             } catch (error) {
                 console.error("Quiz submission failed:", error);
@@ -74,10 +79,8 @@ const CreateQuizScreen = () => {
             }
 
             return;
-
         }
         
-
         setCurrentStep(prev => prev + 1);
     };
 

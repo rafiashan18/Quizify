@@ -1,13 +1,15 @@
 import React from 'react'
-import Footer from '../components/commonComponents/Footer'
-import Navbar from '../components/commonComponents/Navbar'
+import Footer from '../components/Common/Footer'
+import UserNavbar from '../components/Common/UserNavbar'
 import { Outlet } from 'react-router-dom'
 
 const publicLayout = () => {
     return (
         <>
-            <div className=''><Navbar /></div>
-            <main>
+            <div className=''>
+                <UserNavbar />
+            </div>
+            <main className=''>
                 <Outlet />
             </main>
 

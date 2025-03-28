@@ -1,75 +1,101 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, 
   Award, 
-  Clock, 
   Brain,
   ChevronRight,
   Target,
   CheckCircle 
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-// import QuizHistory from './QuizHistory';
-import QuizHistoryCard from '../../../components/userComponents//QuizHistoryCard';
-import { useEffect } from 'react';
+import QuizHistoryCard from '../../../components/UserDashboard/QuizHistoryCard';
+import { getLatestQuizzes, getUserProgressStats } from '../../../services/UserProgressApi';
 
 const UserDashboardScreen = () => {
-  const quizesHistory = useSelector(state => state.playQuiz.quizesHistory);
-  useEffect(()=>{
+  const [dashboardStats, setDashboardStats] = useState({
+    uniqueQuizCount: 0,
+    totalQuestions: 0,
+    totalCorrectAnswers: 0,
+    bestPerformance: "0%"
+  });
+  const [latestQuizzes, setLatestQuizzes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const navigate = useNavigate();
 
-  }, [quizesHistory])
-  const navigate = useNavigate()
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const userStats = await getUserProgressStats();
+        setDashboardStats(userStats);
+        
+        const latestQuizzesData = await getLatestQuizzes(3);
+        setLatestQuizzes(latestQuizzesData);
+        // console.log(latestQuizzes)
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to load dashboard data. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, []);
 
-  const showLatestHistory = quizesHistory.slice(-3);
-  console.log(showLatestHistory)
-  // Calculate additional statistics
-  const totalQuestions = quizesHistory.reduce((acc, quiz) => acc + quiz.questions.length, 0);
-  const totalCorrectAnswers = quizesHistory.reduce((acc, quiz) => {
-    const correctCount = quiz.questions.filter(
-      (q) => q.selectedAnswer === q.correctAnswer
-    ).length;
-    return acc + correctCount;
-  }, 0);
-
-  const stats = [
+  const userDashboardStats = [
     {
       icon: <BookOpen className="w-6 h-6 text-purple-600" />,
       title: "Unique Quizes Taken",
-      value: quizesHistory.length,
+      value: dashboardStats.uniqueQuizCount,
       bgColor: "bg-purple-100"
     },
     {
       icon: <Target className="w-6 h-6 text-yellow-600" />,
       title: "Total Questions",
-      value: totalQuestions,
+      value: dashboardStats.totalQuestions,
       bgColor: "bg-yellow-100"
     },
     {
       icon: <CheckCircle className="w-6 h-6 text-green-600" />,
       title: "Correct Answers",
-      value: totalCorrectAnswers,
+      value: dashboardStats.totalCorrectAnswers,
       bgColor: "bg-green-100"
     },
     {
       icon: <Award className="w-6 h-6 text-orange-600" />,
       title: "Best Performance",
-      value: quizesHistory.length > 0 
-        ? `${Math.max(...quizesHistory.map(quiz => (quiz.score / quiz.questions.length) * 100)).toFixed(0)}%`
-        : "0%",
+      value: dashboardStats.bestPerformance,
       bgColor: "bg-orange-100"
     }
   ];
 
   const getLatestQuiz = () => {
-    if (quizesHistory.length === 0) return null;
-    return quizesHistory[quizesHistory.length - 1];
+    if (latestQuizzes.length === 0) return null;
+    return latestQuizzes[0];
   };
 
   const latestQuiz = getLatestQuiz();
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-purple-600">Loading dashboard data...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 md:p-6 p-2">
+      {error && (
+        <div className="max-w-6xl mx-auto mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          {error}
+        </div>
+      )}
+      
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto mb-12">
         <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl p-8 md:p-12 shadow-lg">
@@ -85,13 +111,13 @@ const UserDashboardScreen = () => {
               <p className="text-white text-sm mb-2">Latest Quiz Completed:</p>
               <p className="text-white font-semibold">{latestQuiz.quizTitle}</p>
               <p className="text-purple-100">
-                Score: {latestQuiz.score}/{latestQuiz.questions.length} 
-                ({((latestQuiz.score / latestQuiz.questions.length) * 100).toFixed(0)}%)
+                Score: {latestQuiz.score}/{latestQuiz.totalQuestions} 
+                ({((latestQuiz.score / latestQuiz.totalQuestions) * 100).toFixed(0)}%)
               </p>
             </div>
           )}
           <button 
-            onClick={()=>navigate('/user/available-quizes')}
+            onClick={() => navigate('/user/available-quizes')}
             className="inline-flex items-center gap-2 bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors duration-200">
             Start a New Quiz
             <ChevronRight className="w-5 h-5" />
@@ -99,10 +125,10 @@ const UserDashboardScreen = () => {
         </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* userDashboardStats Grid */}
       <div className="max-w-6xl mx-auto mb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => (
+          {userDashboardStats.map((stat, index) => (
             <div key={index} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
               <div className="flex items-center gap-4">
                 <div className={`${stat.bgColor} p-3 rounded-lg`}>
@@ -124,34 +150,33 @@ const UserDashboardScreen = () => {
           <h2 className="text-2xl font-bold text-gray-800">
             Your Quiz History
           </h2>
-          {quizesHistory.length > 0 && (
+          {latestQuizzes.length > 0 && (
             <p className="text-purple-600">
-              Total Attempts: {quizesHistory.length}
+              Recent Attempts: {latestQuizzes.length}
             </p>
           )}
         </div>
-        {quizesHistory.length === 0 ? (
+        {latestQuizzes.length === 0 ? (
           <div className="bg-white rounded-xl p-8 text-center">
             <Brain className="w-12 h-12 text-purple-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-800 mb-2">No Quizzes Attempted Yet</h3>
             <p className="text-gray-600 mb-6">Take your first quiz to start building your history!</p>
             <button
-            onClick={()=>navigate('/user/available-quizes')}
-             className="inline-flex items-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-200">
+              onClick={() => navigate('/user/available-quizes')}
+              className="inline-flex items-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-200">
               Browse Quizzes
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         ) : (
-         <div>
-           <div className='grid md:grid-cols-3  grid-cols-1 gap-3'>
-           {
-               showLatestHistory.map(
-                quiz => <QuizHistoryCard quizHistory={quiz} />
-               )
-            }
-           </div>
-         </div>
+          <div>
+            <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3'>
+              {latestQuizzes.map((quiz, index) => (
+              
+                <QuizHistoryCard key={index} quizProgress={quiz} />
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>

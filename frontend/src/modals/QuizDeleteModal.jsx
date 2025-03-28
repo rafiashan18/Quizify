@@ -34,7 +34,7 @@ const QuizDeleteModal = ({ quiz, onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-auto bg-black/50 backdrop-blur-sm flex justify-center items-center">
+    <div className="fixed inset-0 modal-zIndex overflow-auto bg-black/50 backdrop-blur-sm flex justify-center items-center">
       <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-2xl w-full m-4">
         <div className="flex flex-col items-center text-center mb-6">
           <div className="mb-4">

@@ -1,9 +1,9 @@
 import React from 'react'
 
-import HeroSection from '../../components/PublicComponents/Home/HeroSection'
-import FeatureSection from '../../components/PublicComponents/Home/FeatureSection'
-import TestimonialSection from '../../components/PublicComponents/Home/TestimonialSection'
-import CallToAction from '../../components/PublicComponents/Home/CallToAction'
+import HeroSection from '../../components/User/Home/HeroSection'
+import FeatureSection from '../../components/User/Home/FeatureSection'
+import TestimonialSection from '../../components/User/Home/TestimonialSection'
+import CallToAction from '../../components/User/Home/CallToAction'
 
 const Home = () => {
   return (

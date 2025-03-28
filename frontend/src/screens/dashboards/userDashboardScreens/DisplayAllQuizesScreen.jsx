@@ -1,109 +1,229 @@
-import React, { useState } from 'react';
-import Carousel from '../../../components/commonComponents/Carousel';
-import quizData from '../../../constants/quizData';
-import CategorySlider from '../../../components/userComponents/CategorySlider';
+import React, { useState, useEffect } from 'react';
+import Carousel from '../../../components/Common/Carousel';
+import CategorySlider from '../../../components/Common/CategorySlider';
+import { getAllQuizzes } from '../../../services/QuizApi';
+import { 
+  allCategoriesByLimited, 
+  LimitedQuizBYCategoryAndType, 
+  AllQuizzesByCategoryAndType 
+} from '../../../services/QuizRetrievalApi';
+import { useNavigate } from 'react-router-dom';
 
 const DisplayAllQuizesScreen = () => {
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  // getQuizzesByDifficulty
-  const getQuizzesByDifficulty = (category, difficulty) => {
-    return quizData.allQuizzes.filter(quiz =>
-      quiz.category === category &&
-      quiz.difficulty === difficulty
-    );
-  };
+  const navigate=useNavigate()
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [allCategoriesQuizzes, setAllCategoriesQuizzes] = useState({});
+  const [categoryQuizzes, setCategoryQuizzes] = useState({
+    easy: [],
+    medium: [],
+    hard: [],
+    popular: [],
+    recent: []
+  });
+  const [loading, setLoading] = useState(true);
 
-  // popular quizzes (category wise)
-  const getPopularQuizzesByCategory = (category) => {
-    return quizData.allQuizzes
-      .filter(quiz => quiz.category === category)
-      .sort((a, b) => b.popularity - a.popularity)
-      .slice(0, 10);
-  };
+  useEffect(() => {
+    const fetchAllCategoriesData = async () => {
+      try {
+        setLoading(true);
+        const response = await allCategoriesByLimited();
+        
+        const categoriesData = response && response.quizesByCategories 
+          ? response.quizesByCategories 
+          : response; 
+        
+        if (categoriesData && typeof categoriesData === 'object') {
+          const validatedData = Object.fromEntries(
+            Object.entries(categoriesData).map(([category, quizzes]) => {
+              return [category, Array.isArray(quizzes) ? quizzes : []];
+            })
+          );
+          setAllCategoriesQuizzes(validatedData);
+          console.log("Processed categories data:", validatedData);
+        } else {
+          console.error("Invalid data format received:", categoriesData);
+          setAllCategoriesQuizzes({});
+        }
+      } catch (error) {
+        console.error("Error fetching all categories data:", error);
+        setAllCategoriesQuizzes({});
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Get most recent quizzes
-  const getMostRecentQuizzes = (category) => {
-    return quizData.allQuizzes
-      .filter(quiz => quiz.category === category)
-      .slice(-10);
-  };
+    fetchAllCategoriesData();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      if (selectedCategory && selectedCategory !== "all") {
+        try {
+          setLoading(true);
+          const response = await LimitedQuizBYCategoryAndType(selectedCategory);
+          console.log(response)
+          const categoryData = response && response.quizzesByType 
+            ? response.quizzesByType 
+            : response; // Fallback to direct response
+          
+          if (categoryData && typeof categoryData === 'object') {
+            const validatedData = {
+              easy: Array.isArray(categoryData.easy) ? categoryData.easy : [],
+              medium: Array.isArray(categoryData.medium) ? categoryData.medium : [],
+              hard: Array.isArray(categoryData.hard) ? categoryData.hard : [],
+              popular: Array.isArray(categoryData.popular) ? categoryData.popular : [],
+              recent: Array.isArray(categoryData.recent) ? categoryData.recent : []
+            };
+            setCategoryQuizzes(validatedData);
+            console.log("Processed category data:", validatedData);
+          } else {
+            console.error("Invalid category data format:", categoryData);
+            setCategoryQuizzes({
+              easy: [],
+              medium: [],
+              hard: [],
+              popular: [],
+              recent: []
+            });
+          }
+        } catch (error) {
+          console.error(`Error fetching data for category ${selectedCategory}:`, error);
+          setCategoryQuizzes({
+            easy: [],
+            medium: [],
+            hard: [],
+            popular: [],
+            recent: []
+          });
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    if (selectedCategory !== "all") {
+      fetchCategoryData();
+    }
+  }, [selectedCategory]);
 
   const handleCategoryClick = (category) => {
-    if (category === "all") {
-      setSelectedCategory(null);
-    } else {
-      setSelectedCategory(category === selectedCategory ? null : category);
-    }
-  };
-  
-  const getFilteredQuizzes = () => {
-    if (!selectedCategory) return quizzes;
-    return quizzes.filter(quiz => quiz.category === selectedCategory);
+    console.log(category)
+    setSelectedCategory(category);
   };
 
-  const renderCarouselSection = (title, quizzes) => {
-    if (quizzes && quizzes.length > 0) {
+  const handleViewAll = async (category, type) => {
+    try {
+    
+      navigate(`/user/view-category-quizes/${category}/${type}`)
+    } catch (error) {
+      console.error(`Error fetching all quizzes for ${category} - ${type}:`, error);
+    }
+  };
+
+  const renderCarouselSection = (title, quizzes, category, type) => {
+
+    const safeQuizzes = Array.isArray(quizzes) ? quizzes : [];
+    
+    if (safeQuizzes.length > 0) {
       return (
         <div className="mb-8">
-          <Carousel title={title} quizzes={quizzes} />
+          <Carousel 
+            title={title} 
+            quizzes={safeQuizzes} 
+            onViewAll={() => handleViewAll(category, type)}
+          />
         </div>
       );
     }
     return null;
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      </div>
+    );
+  }
+
+  const hasAnyQuizzes = Object.values(allCategoriesQuizzes).some(quizzes => 
+    Array.isArray(quizzes) && quizzes.length > 0
+  );
+
   return (
-    <div className="relative ">
-      <div className="z-40 bg-white shadow-sm">
-        <CategorySlider onCategoryClick={handleCategoryClick} selectedCategory={selectedCategory} />
+    <div className="relative">
+      <div className=" z-40 bg-white shadow-sm sticky top-0">
+        <CategorySlider 
+          onCategoryClick={handleCategoryClick} 
+          selectedCategory={selectedCategory} 
+        />
       </div>
 
       <div className="p-4">
-        {!selectedCategory ? (
-
+        {selectedCategory === "all" ? (
           <>
-            {renderCarouselSection(
-              "Popular Quizzes",
-              quizData.allQuizzes.sort((a, b) => b.popularity - a.popularity).slice(0, 10)
-            )}
-            {quizData.getAllCategories().map(category => {
-              const categoryQuizzes = quizData.allQuizzes.filter(quiz => quiz.category === category);
-              return categoryQuizzes.length > 0 ? (
+            {Object.entries(allCategoriesQuizzes).map(([category, quizzes]) => {
+
+              const safeQuizzes = Array.isArray(quizzes) ? quizzes : [];
+              
+              return safeQuizzes.length > 0 ? (
                 <div key={category} className="mb-8">
-                  <Carousel title={`${category} Quizzes`} quizzes={categoryQuizzes} />
+                  <Carousel 
+                    title={`${category} Quizzes`} 
+                    quizzes={safeQuizzes} 
+                    onViewAll={() => handleViewAll(category, 'all')}
+                  />
                 </div>
               ) : null;
             })}
+            
+            {/* No quizzes message */}
+            {!hasAnyQuizzes && (
+              <div className="text-center py-8 text-gray-500">
+                No quizzes available yet. Check back soon!
+              </div>
+            )}
           </>
         ) : (
           <>
             {renderCarouselSection(
               `Popular ${selectedCategory} Quizzes`,
-              getPopularQuizzesByCategory(selectedCategory)
+              categoryQuizzes.popular,
+              selectedCategory,
+              'popular'
             )}
             {renderCarouselSection(
               `Hard ${selectedCategory} Quizzes`,
-              getQuizzesByDifficulty(selectedCategory, 'hard')
+              categoryQuizzes.hard,
+              selectedCategory,
+              'hard'
             )}
             {renderCarouselSection(
               `Medium ${selectedCategory} Quizzes`,
-              getQuizzesByDifficulty(selectedCategory, 'medium')
+              categoryQuizzes.medium,
+              selectedCategory,
+              'medium'
             )}
             {renderCarouselSection(
               `Easy ${selectedCategory} Quizzes`,
-              getQuizzesByDifficulty(selectedCategory, 'easy')
+              categoryQuizzes.easy,
+              selectedCategory,
+              'easy'
             )}
             {renderCarouselSection(
               `Most Recent ${selectedCategory} Quizzes`,
-              getMostRecentQuizzes(selectedCategory)
+              categoryQuizzes.recent,
+              selectedCategory,
+              'recent'
+            )}
+            
+            {/* No quizzes for selected category message */}
+            {selectedCategory !== "all" && Object.values(categoryQuizzes).every(arr => arr.length === 0) && (
+              <div className="text-center py-8 text-gray-500">
+                No quizzes available for {selectedCategory} category yet.
+              </div>
             )}
           </>
-        )}
-
-        {selectedCategory && !quizData.allQuizzes.some(quiz => quiz.category === selectedCategory) && (
-          <div className="text-center py-8 text-gray-500">
-            No quizzes available for {selectedCategory} category yet.
-          </div>
         )}
       </div>
     </div>

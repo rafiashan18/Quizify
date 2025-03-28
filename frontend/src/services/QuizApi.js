@@ -24,7 +24,6 @@ export const addQuiz = async (data) => {
 
 export const getAllQuizzes = async () => {
     try {
-        console.log("hello trying to get quizes")
         const response = await api.get('quiz/showQuizes');
         return response.data;
     } catch (error) {
@@ -55,7 +54,13 @@ export const getQuizById = async (id) => {
 
 export const updateQuiz = async (id, quizData) => {
     try {
-        const response = await api.put(`/quiz/updateQuizById/${id}`,quizData);
+        console.log(quizData)
+        
+        const response = await api.put(`/quiz/updateQuizById/${id}`,quizData,{
+            headers:{
+                "Content-Type":'multipart/form-data'
+            }
+        });
         return response.data;
     } catch (error) {
         console.error(`Error updating quiz with ID ${id}:`, error);
@@ -94,3 +99,14 @@ export const deleteQuizQuestion = async (quizId, questionId) => {
         };
     }
 }
+
+export const searchQuizzes = async (query) => {
+    try {
+      const response = await api.get(`/quiz/getQuizSearchResults?query=${encodeURIComponent(query)}`);
+      return response.data;
+    } catch (error) {
+      console.error('Search quizzes error:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to search quizzes';
+      throw new Error(errorMessage);
+    }
+  };

@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-// Centralized toast configuration
+
 const defaultOptions = {
   position: 'top-right',
   autoClose: 3000,

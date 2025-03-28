@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '../../redux/Slices/authSlice';
 import { login } from '../../services/AuthApi';
 import loginImage from "../../assets/images/loginImage.jpg";
-import LoginForm from '../../components/CheckAuth/LoginForm'; 
+import LoginForm from '../../components/AuthForms/LoginForm'; 
 
 const LoginScreen = () => {
   const navigate = useNavigate();
@@ -29,6 +29,7 @@ const LoginScreen = () => {
         } else {
             navigate('/admin');
         }
+
     } catch (error) {
       console.log(error);
       
@@ -44,13 +45,15 @@ const LoginScreen = () => {
       else {
           setBackendError(error || 'Failed to login. Please check your credentials and try again.');
       }
+      
     } finally {
         setLoading(false);
     }
+
   };
   
   return (
-    <div className="min-h-screen relative md:mt-28 flex items-start justify-center p-2 md:pt-2">
+    <div className=" relative my-20 flex items-start justify-center p-2 md:pt-2">
       <div className="w-full max-w-3xl rounded-2xl overflow-hidden shadow-2xl">
         <div className="flex">
           {/* Form Section */}
@@ -63,22 +66,22 @@ const LoginScreen = () => {
                 </p>
               </div>
 
-              <button className="w-full flex items-center justify-center gap-2 rounded-3xl bg-white border border-yellow-600 p-2.5 hover:bg-gray-50 transition-all mb-4 text-sm">
+              {/* <button className="w-full flex items-center justify-center gap-2 rounded-3xl bg-white border border-yellow-600 p-2.5 hover:bg-gray-50 transition-all mb-4 text-sm">
                 <img
                   src="https://www.svgrepo.com/show/475656/google-color.svg"
                   alt="Google logo"
                   className="w-5 h-5"
                 />
                 <span>Continue with Google</span>
-              </button>
+              </button> */}
 
-              <div className="relative my-4">
+              {/* <div className="relative my-4">
                 <div className="relative flex justify-center text-xs">
                   <span className="px-2 bg-white border-purple-400 rounded-md font-semibold text-purple-800/70">
                     Or continue with
                   </span>
                 </div>
-              </div>
+              </div> */}
 
               
               <LoginForm 

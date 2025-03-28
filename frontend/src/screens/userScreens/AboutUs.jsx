@@ -1,8 +1,8 @@
 import React from 'react'
-import HeroSection from '../../components/commonComponents/HeroSection'
-import CoreValues from '../../components/PublicComponents/AboutpageComponents/CoreValues'
-import CTA from '../../components/commonComponents/CTA'
-import ImageGallery from '../../components/PublicComponents/AboutpageComponents/ImageGallary'
+import HeroSection from '../../components/Common/HeroSection'
+import CoreValues from '../../components/User/AboutpageComponents/CoreValues'
+import CTA from '../../components/Common/CTA'
+import ImageGallery from '../../components/User/AboutpageComponents/ImageGallary'
 
 const AboutUs = () => {
   return (

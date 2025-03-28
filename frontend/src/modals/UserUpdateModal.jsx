@@ -49,7 +49,7 @@ const UserUpdateModal = ({ user, onSuccess }) => {
         
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
+            <label className=" text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
               <User className="w-4 h-4 text-purple-500" />
               Name
             </label>

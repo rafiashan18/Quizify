@@ -83,7 +83,7 @@ const UserAddModel = ({ onClose, onSucess }) => {
 
     return (
         <>
-            <div className="fixed inset-0 z-50 overflow-auto">
+            <div className="fixed inset-0 modal-zIndex overflow-auto">
                 <div className="min-h-screen px-4 text-center">
                     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" />
 
